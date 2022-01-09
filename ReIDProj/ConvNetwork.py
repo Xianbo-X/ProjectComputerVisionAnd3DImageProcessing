@@ -47,7 +47,8 @@ class ConvNet(nn.Module):
 
     def forward(self, x):
         feature = self.feature_extraction(x)
-        return self.outputFC(feature)
+        return self.forward_feature(feature)
+        # return self.outputFC(feature)
 
     def feature_extraction(self, x):
         input = x
@@ -60,6 +61,9 @@ class ConvNet(nn.Module):
     def predict_prob(self, x):
         output = self.forward(x)
         return output.softmax(dim=1)  # apply softmax to each row, each batch
+    
+    def forward_feature(self,feature):
+        return self.outputFC(feature)
 
     def predict(self, x):
         prob = self.predict_prob(x)
