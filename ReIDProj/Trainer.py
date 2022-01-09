@@ -1,5 +1,6 @@
 import torch
 import os
+import logging
 
 
 def train(model, train_loader, test_loader, optimizer, loss_func, EPOCHES, PATH="./",device=torch.device("cpu"), checkpoint_interval=10):
@@ -21,8 +22,8 @@ def train(model, train_loader, test_loader, optimizer, loss_func, EPOCHES, PATH=
             optimizer.step()
 
             if batch_idx % 100 == 0:
-                print(
-                    "Train Epoch:{}/{} [{}/{} ({:.0f}%)] \t Loss: {:.6f}\r".format(
+                logging.info(
+                    "Train Epoch:{}/{} [{}/{} ({:.0f}%)] \t Loss: {:.6f}".format(
                         epoch + 1,
                         EPOCHES,
                         batch_idx * len(data),
@@ -30,15 +31,14 @@ def train(model, train_loader, test_loader, optimizer, loss_func, EPOCHES, PATH=
                         100 * (batch_idx / len(train_loader)),
                         loss_val.item(),
                     ),
-                    end="",
                 )
 
         avg_loss = avg_loss / (len(train_loader))
         train_loss_recorder.append([epoch, avg_loss])
         lr_recorder.append([epoch, optimizer.param_groups[0]["lr"]])
         if epoch % 20 == 0:
-            print(
-                "Train Epoch:{}/{} \t Average Loss: {:.6f}\r".format(
+            logging.info(
+                "Train Epoch:{}/{} \t Average Loss: {:.6f}".format(
                     epoch+1, EPOCHES, avg_loss
                 )
             )
