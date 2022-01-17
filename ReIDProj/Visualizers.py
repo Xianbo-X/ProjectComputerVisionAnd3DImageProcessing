@@ -6,9 +6,11 @@ from torch.utils.data import Dataset
 from abc import ABCMeta,abstractmethod
 
 class Visaulizer(metaclass=ABCMeta):
-    def __init__(self, dataset) -> None:
+    def __init__(self, dataset,save_path=".") -> None:
         self.dataset=dataset
-    
+        self.save_path="./"
+    # def set_path_filename():
+
     @abstractmethod
     def __call__(self, model:torch.nn.Module):
         pass
@@ -30,7 +32,7 @@ class VisualizationEmbeding(Visaulizer):
             samples[num] = digit_set[random_idx]
         return samples
 
-    def draw_embeding_space(self, all_points):
+    def draw_embeding_space(self, all_points,filename:str):
         # Plot and show
         colors = matplotlib.cm.Paired(np.linspace(0, 1, len(all_points)))
         fig = plt.figure(figsize=(10, 10))
@@ -46,14 +48,14 @@ class VisualizationEmbeding(Visaulizer):
             ax.legend()
         return fig
 
-    def feature_exract_draw(self, model:torch.nn.Module):
+    def feature_exract_draw(self, model:torch.nn.Module,filename:str):
         all_points = []
         for i in range(10):
             index = self.samples[i]
             data = self.dataset.data[index].reshape(-1, 1, 28, 28) / 255
             targets = self.dataset.targets[index]
             all_points.append(model.feature_extraction(data).detach().numpy())
-        self.draw_embeding_space(all_points)
+        self.draw_embeding_space(all_points,filename:str)
     
     def show_samples(self):
         for key,data in self.samples.items():
@@ -62,5 +64,5 @@ class VisualizationEmbeding(Visaulizer):
             for i in range(len(data)):
                 ax[i].imshow(self.dataset.data[data[i]])
 
-    def __call__(self, model):
-        self.feature_exract_draw(model)
+    def __call__(self, model,filename:str):
+        self.feature_exract_draw(model,filename)
