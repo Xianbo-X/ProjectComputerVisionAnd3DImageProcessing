@@ -1,5 +1,5 @@
 import numpy as np
-
+from pathlib import Path
 class LinearLayer():
     """
     y=xA^T+b
@@ -131,3 +131,6 @@ class LinearLayer():
         bias_grad=self.derivative_on_bias(chain_grad,"mean")
         self.set_bias(self.optimizers["bias"](self.bias,bias_grad,*arg))
 
+    def save_model(self,path):
+        for name in self.parameter_names():
+            np.save(path+"_"+name,getattr(self,name))
