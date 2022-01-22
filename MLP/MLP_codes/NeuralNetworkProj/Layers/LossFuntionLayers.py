@@ -21,7 +21,9 @@ class LossFuncitonLayer(metaclass=ABCMeta):
         return self.grad
 
     def __call__(self, x, label):
-        return self.forward(x,label)
+        self.lastData=x
+        self.lastLabel=label
+        return self.forward(self.lastData,self.lastLabel)
 
     @abstractmethod
     def forward(self,x,label):
@@ -32,8 +34,6 @@ class CrossEntropy(LossFuncitonLayer):
         super().__init__(reduce)
     
     def forward(self,x,label):
-        self.lastData=x
-        self.lastLabel=label
         return self.cross_entropy(x,label,self.reduce)
 
     def cross_entropy(self, x, label: np.ndarray, reduce="mean"):
