@@ -45,6 +45,11 @@ class LinearLayer():
         self.optimizers[forwhom]=optimizer
         
 
+    def parameter_names(self):
+        return self.trainable_variable_names
+    def parameter_seters(self):
+        return self.trainable_variable_seters
+
     def forward(self,x):
         return self.linear_transform(x)
     
