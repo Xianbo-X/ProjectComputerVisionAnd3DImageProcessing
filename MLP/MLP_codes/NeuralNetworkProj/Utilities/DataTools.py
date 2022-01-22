@@ -1,4 +1,7 @@
 import numpy as np
+import torch
+from torchvision import datasets
+from torchvision.transforms import transforms
 
 def make_batches(x_train:np.ndarray,y_train:np.ndarray,batch_size:int,strict_split=True)->list:
     """
@@ -19,3 +22,19 @@ def make_batches(x_train:np.ndarray,y_train:np.ndarray,batch_size:int,strict_spl
     x_batches=np.array_split(x_train[:length],batch_nums)
     y_batches=np.array_split(y_train[:length],batch_nums)
     return x_batches,y_batches
+
+def get_mnist_data(root="./data"):
+    """"
+    Load Mnist Data by torchvision datasets, apply transfom ToTensor()
+    """
+    train_data = datasets.MNIST(root=root, train=True, download=True,transform=transforms.ToTensor())
+    test_data = datasets.MNIST(root=root, train=False, download=True, transform=transforms.ToTensor())
+    return train_data,test_data
+
+def get_data_loader(train_data,test_data,batch_size):
+    """
+    Generate dataloader
+    """
+    train_loader = torch.utils.data.DataLoader(train_data, batch_size = batch_size, num_workers = 0)
+    test_loader = torch.utils.data.DataLoader(test_data, batch_size = batch_size, num_workers = 0)
+    return train_loader,test_loader
